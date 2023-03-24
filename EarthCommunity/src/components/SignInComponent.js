@@ -3,8 +3,20 @@ import { View, StyleSheet, Pressable, Button} from 'react-native';
 import { TextInput, Text, Spacer} from "@react-native-material/core";
 import { AntDesign } from '@expo/vector-icons';
 import styleGlobal from '../style/styleGlobal';
+import { useNavigation } from '@react-navigation/native';
 
 export default function SignInComponent(){
+
+    const navigation = useNavigation();
+
+    const SignIn = () => {
+
+        navigation.reset({
+            index: 0,
+            routes: [{name: "Feed"}]
+        })
+    }
+
     return(
         <View style={styles.container}>
                 <TextInput variant="standard" label="E-mail" style={{ margin: 25 }} />
@@ -13,7 +25,7 @@ export default function SignInComponent(){
                     <View style={{flexDirection: 'row', margin: 25, alignItems: 'center', }}>
                         <Text variant="h5">Sign in</Text>
                         <Spacer/>
-                        <Pressable style={styles.button}>
+                        <Pressable style={styles.button} onPress={() => SignIn()}>
                             <AntDesign name="arrowright" size={24} color="#FFFFFF"/>
                         </Pressable>   
                     </View>                

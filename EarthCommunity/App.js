@@ -1,13 +1,27 @@
-import { StyleSheet, View } from 'react-native';
-import { Text } from "@react-native-material/core";
-import styleGlobal from './src/style/styleGlobal';
-import Login from './src/screens/Login';
+import { StyleSheet } from 'react-native';
+import SignIn from './src/screens/SignIn';
+import SignUp from './src/screens/SignUp';
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import Feed from './src/screens/Feed';
+
+const Stack = createStackNavigator();
+
+function Navigation() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Sign In" options={{title: '',headerTransparent: true, headerShown: false}} component={SignIn} />
+      <Stack.Screen name="Sign Up" options={{title: '',headerTransparent: true, headerShown: false}} component={SignUp} />
+      <Stack.Screen name="Feed"    options={{title: '',headerTransparent: true, headerShown: false}} component={Feed} />
+    </Stack.Navigator>
+  );
+}
 
 export default function App() {
   return (
-    <View>
-      <Login />
-    </View>
+    <NavigationContainer>
+      <Navigation />
+    </NavigationContainer>
   );
 }
 

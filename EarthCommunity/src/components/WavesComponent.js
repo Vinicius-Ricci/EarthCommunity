@@ -1,7 +1,5 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { TextInput, Text, Button } from "@react-native-material/core";
-import styleGlobal from '../style/styleGlobal';
 import WavyBackground from 'react-native-wavy-background';
 
 export default function WavesComponent(){
