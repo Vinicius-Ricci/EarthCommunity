@@ -1,13 +1,13 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import SignInComponent from '../components/SignInComponent';
-import WavesComponent from '../components/WavesComponent';
+import WavesComponentSignIn from '../components/WavesComponentSignIn';
 import styleGlobal from '../style/styleGlobal';
 
 export default function SignIn({navigation}){
     return(
         <View>
-            <WavesComponent />
+            <WavesComponentSignIn />
             <SignInComponent />
         </View>
     )

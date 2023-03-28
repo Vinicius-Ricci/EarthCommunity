@@ -19,8 +19,8 @@ export default function SignInComponent(){
 
     return(
         <View style={styles.container}>
-                <TextInput variant="standard" label="E-mail" style={{ margin: 25 }} />
-                <TextInput variant="standard" label="Password" style={{ margin: 25 }} />
+                <TextInput variant="standard" color = '#62D2A2' label="E-mail" style={{ margin: 25 }} />
+                <TextInput variant="standard" color = '#62D2A2' label="Password" style={{ margin: 25 }} />
 
                     <View style={{flexDirection: 'row', margin: 25, alignItems: 'center', }}>
                         <Text variant="h5">Sign in</Text>
@@ -30,7 +30,7 @@ export default function SignInComponent(){
                         </Pressable>   
                     </View>                
 
-                <Button variant="text" title="Sign up" disabled style={{marginTop: 40}}/>
+                <Button variant="text" title="Sign up" onPress={() => navigation.navigate('Sign Up') } color = '#6c757d' style={{marginTop: 40}}/>
                 
         </View>
         
@@ -41,7 +41,12 @@ const styles = StyleSheet.create({
 
     container:{
         margin: 20,
-        marginTop: 200
+        marginTop: 30,
+    },
+
+    containerimg: {
+        backgroundColor: styleGlobal.colors.green2,
+        alignItems: 'center'
     },
 
     button: {
@@ -53,10 +58,6 @@ const styles = StyleSheet.create({
         shadowRadius: 10,
         shadowOpacity: 0.3,
         backgroundColor: styleGlobal.colors.green2
-    },
-
-    colorButton: {
-        
     }
 
 });

@@ -1,11 +1,14 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import styleGlobal from '../style/styleGlobal';
+import SignUpComponent from '../components/SignUpComponent';
+import WavesComponentSignUp from '../components/WasvesComponentSignUp';
 
 export default function SignUp(){
     return(
-        <View>
-            <Text>SignUp</Text>
+        <View style={styles.container}>
+            <SignUpComponent />
+            <WavesComponentSignUp />
         </View>
     )
 }
