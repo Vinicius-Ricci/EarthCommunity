@@ -1,12 +1,65 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'; 
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { StyleSheet } from 'react-native';
+import Start from './Start';
+import Groups from './Groups';
+import Profile from './Profile';
+import Publish from './Publish';
 import styleGlobal from '../style/styleGlobal';
 
 export default function Feed(){
+
+  const TabB = createMaterialBottomTabNavigator();
+
     return(
-        <View style={styles.container}>
-            <Text>Feed</Text>
-        </View>
+    <TabB.Navigator
+    activeColor="#ffff"
+    inactiveColor="#6c757d"
+    barStyle={{ backgroundColor: '#17B978' }}
+    >
+      <TabB.Screen 
+      name="Home" 
+      component={Start} 
+      options={{
+        tabBarLabel: 'Home',
+        tabBarIcon: ({ color }) => (
+          <MaterialCommunityIcons name="home" color={color} size={26} />
+        ),
+      }}
+      
+      />
+      <TabB.Screen 
+      name="Groups" 
+      component={Groups} 
+      options={{
+        tabBarLabel: 'Groups',
+        tabBarIcon: ({ color }) => (
+          <MaterialCommunityIcons name="account-group" color={color} size={26} />
+        ),
+      }}
+      />
+      <TabB.Screen 
+      name="Publish" 
+      component={Publish} 
+      options={{
+        tabBarLabel: 'Publish',
+        tabBarIcon: ({ color }) => (
+          <MaterialCommunityIcons name="plus-circle" color={color} size={26} />
+        ),
+      }}
+      />
+      <TabB.Screen 
+      name="Profile" 
+      component={Profile} 
+      options={{
+        tabBarLabel: 'Profile',
+        tabBarIcon: ({ color }) => (
+          <MaterialCommunityIcons name="account-circle" color={color} size={26} />
+        ),
+      }}
+      />
+    </TabB.Navigator>
     )
 }
 
