@@ -4,7 +4,7 @@ import SignInComponent from '../components/SignInComponent';
 import WavesComponentSignIn from '../components/WavesComponentSignIn';
 import styleGlobal from '../style/styleGlobal';
 
-export default function SignIn({navigation}){
+export default function SignIn(){
     return(
         <View>
             <WavesComponentSignIn />
