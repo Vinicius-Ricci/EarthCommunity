@@ -5,13 +5,15 @@ import WavesComponentGroups from '../components/WavesComponentGroups';
 import { StyleSheet, View, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { TextInput, Button, Avatar, SendIcon} from '@react-native-material/core';
 import { Ionicons } from '@expo/vector-icons'; 
-import styleGlobal from '../style/styleGlobal';
 import GroupsContainer from '../components/GroupsContainer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 
 export default function Groups() {
   const [selectedTab, setSelectedTab] = useState('seusGrupos');
   const navigation = useNavigation();
+  
 
   async function handleForm(){
   navigation.navigate('GroupsForm')
@@ -22,6 +24,16 @@ export default function Groups() {
     setSelectedTab(tabName);
   };
   const windowWidth = Dimensions.get('window').width;
+
+  // useEffect(() => {
+  //   const getGroup = async () => {
+  //     const groupString = await AsyncStorage.getItem('group');
+  //     const Group = JSON.parse(groupString);
+  //     setGroup(Group);
+  //   };
+
+  //   getGroup();
+  // }, []);
 
   return (
     <ScrollView>
@@ -51,6 +63,7 @@ export default function Groups() {
       </View>
       <View style={styles.viewContainer}>
         {selectedTab === 'seusGrupos' ? (
+
           <View style={styles.groupsContainer}>
             <GroupsContainer style={styles.groupsItem} />
             <GroupsContainer style={styles.groupsItem} />

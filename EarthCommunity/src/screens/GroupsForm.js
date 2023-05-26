@@ -43,6 +43,8 @@ export default function GroupsForm() {
         }
       });
       console.log(response.data);
+      const group = response.data.group;
+      await AsyncStorage.setItem('group', JSON.stringify(group));
     } catch (error) {
       console.error(error);
     }
