@@ -17,7 +17,7 @@ export default function GroupsForm() {
     const getUser = async () => {
       const userString = await AsyncStorage.getItem('user');
       const user = JSON.parse(userString);
-      setUserId(user.id);
+      setUserId(user._id);
     };
 
     getUser();
@@ -25,6 +25,13 @@ export default function GroupsForm() {
 
   async function handleCreateGroup() {
     try {
+      if (!userId) {
+      // Verifica se o userId está definido antes de fazer a solicitação
+      console.error("ID do usuário não está definid");
+      console.log(userId);
+
+      return;
+    }
       const response = await axios.post(`https://earth-community-backend-production.up.railway.app/api/group/create/${userId}`, {
         name: name,
         image: image,
