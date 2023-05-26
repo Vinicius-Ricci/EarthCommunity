@@ -19,6 +19,7 @@ export default function SignUpComponent() {
           email: email
         },
         security: {
+          authWith: "manually",
           password: password,
           confirmPassword: confirmPassword,
         }

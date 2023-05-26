@@ -1,27 +1,43 @@
 import { Surface, Stack, Avatar, Text, HStack } from '@react-native-material/core';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Measure } from 'react-native-size-matters';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ScrollView, StyleSheet, Image, TextInput } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-function ContainerFeed() {
+const ContainerFeed = () => {
+    const [user, setUser] = useState(null);
+  
+    useEffect(() => {
+      const getUser = async () => {
+        const userString = await AsyncStorage.getItem('user');
+        const user = JSON.parse(userString);
+        console.log(user); // Verifica o conteúdo do objeto user
+        setUser(user);
+      };
+  
+      getUser();
+    }, []);
+  
 
-    const [surfaceHeight, setSurfaceHeight] = useState(50);
 
     return (
-        <ScrollView>
-            <Stack fill center spacing={10}>
-                <Surface
-                    elevation={4}
-                    category="medium"
-                    style={{ width: '100%', height: 800, marginTop: 30, }}>
+      <ScrollView>
+        <Stack fill center spacing={10}>
+          <Surface
+            elevation={4}
+            category="medium"
+            style={{ width: '100%', height: 800, marginTop: 30, }}
+          >
+            {/* Avatar e nome do usuario */}
+            <HStack m={4} spacing={6} style={{ alignItems: 'center', margin: 10 }}>
+  <Avatar image={{ uri: "https://cdn.dribbble.com/users/588874/screenshots/2251116/dribbble.png" }} size={40} />
+ {/* quero nome aqui! */}
 
-                    {/* Avatar e nome do usuario */}
+ <Text>{user ? `${user.info.firstName} ${user.info.surname}` : 'Nenhum usuário salvo'}</Text>
 
-                    <HStack m={4} spacing={6} style={{ alignItems: 'center', margin: 10 }}>
-                        <Avatar image={{ uri: "https://cdn.dribbble.com/users/588874/screenshots/2251116/dribbble.png" }} size={40} />
-                        <Text>Vinicius Ricci</Text>
-                    </HStack>
+</HStack>
+
 
                     {/* Descrição da Publicação */}
 
@@ -87,3 +103,4 @@ const styles = StyleSheet.create({
     },
 
 });
+

@@ -4,6 +4,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { StyleSheet } from 'react-native';
 import Start from './Start';
 import Groups from './Groups';
+import GroupsForm from './GroupsForm';
 import Profile from './Profile';
 import Publish from './Publish';
 import styleGlobal from '../style/styleGlobal';
@@ -38,6 +39,10 @@ export default function Feed(){
           <MaterialCommunityIcons name="account-group" color={color} size={26} />
         ),
       }}
+      />
+         <TabB.Screen 
+      name="GroupsForm" 
+      component={GroupsForm} 
       />
       <TabB.Screen 
       name="Publish" 
