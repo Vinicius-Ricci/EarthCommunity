@@ -1,5 +1,5 @@
 import { Text } from '@react-native-material/core';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import WavesComponentGroups from '../components/WavesComponentGroups';
 import { StyleSheet, View, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
@@ -7,17 +7,31 @@ import { TextInput, Button, Avatar, SendIcon} from '@react-native-material/core'
 import { Ionicons } from '@expo/vector-icons'; 
 import GroupsContainer from '../components/GroupsContainer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-
+import axios from "axios";
 
 export default function Groups() {
   const [selectedTab, setSelectedTab] = useState('seusGrupos');
+  const [groups, setGroups] = useState([]);
   const navigation = useNavigation();
-  
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "https://earth-community-backend-production.up.railway.app/api/group/get-all"
+        );
+        setGroups(response.data.group);
+        console.log(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   async function handleForm(){
-  navigation.navigate('GroupsForm')
-
+    navigation.navigate('GroupsForm')
   }
 
   const handleTabPress = (tabName) => {
@@ -25,21 +39,11 @@ export default function Groups() {
   };
   const windowWidth = Dimensions.get('window').width;
 
-  // useEffect(() => {
-  //   const getGroup = async () => {
-  //     const groupString = await AsyncStorage.getItem('group');
-  //     const Group = JSON.parse(groupString);
-  //     setGroup(Group);
-  //   };
-
-  //   getGroup();
-  // }, []);
-
   return (
     <ScrollView>
       <WavesComponentGroups />
       <TouchableOpacity style={styles.overlay} onPress={handleForm}>
-  <Ionicons name="add" size={40} color="#696969" style={{fontWeight:'bold'}} />
+        <Ionicons name="add" size={40} color="#696969" style={{fontWeight:'bold'}} />
         <Text style={{color:"#696969",fontWeight:'bold'}}>Novo Grupo</Text>
       </TouchableOpacity>
 
@@ -62,12 +66,16 @@ export default function Groups() {
         </TouchableOpacity>
       </View>
       <View style={styles.viewContainer}>
-        {selectedTab === 'seusGrupos' ? (
-
+    {selectedTab === 'seusGrupos' ? (
           <View style={styles.groupsContainer}>
-            <GroupsContainer style={styles.groupsItem} />
-            <GroupsContainer style={styles.groupsItem} />
-          </View>
+          {Array.isArray(groups) ? (
+  groups.map((group) => (
+    <GroupsContainer key={group._id} group={group} style={styles.groupsItem} />
+  ))
+) : (
+  <Text>No groups available</Text>
+)}
+   </View>
         ) : (
           <View style={styles.explorarView}>
             <Text>Conteúdo da view "Explorar"</Text>
@@ -120,11 +128,13 @@ const styles = StyleSheet.create({
     padding: 20,
         borderRadius: 10,
       },
-      groupsContainer: {
-      
+      groupsContainer:{
+        width:'100%',
+
+
       },
       groupsItem: {
-        width: '48%',
+        // width: '48%',
         marginBottom: '10%',
       },
       
