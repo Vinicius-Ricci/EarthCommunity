@@ -10,6 +10,32 @@ export default function Publish(){
     const [selectedOption, setSelectedOption] = useState(null);
     const [selectedImageUri, setSelectedImageUri] = useState(null);
 
+    
+  async function handleCreatePost() {
+    try {
+      if (!userId) {
+        console.error("ID do usuário não está definido");
+        return;
+      }
+
+      const response = await axios.post(`https://earth-community-backend-production.up.railway.app/api/group/create/${userId}`, {
+        name: name,
+        image: image,
+        description: description,
+        category: category,
+        headOffice: {
+          city: city,
+          state: state,
+        } 
+      });
+
+      console.log(response.data);
+ 
+      navigation.navigate('Home');
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
               const options = [
               { key: 0, label: 'Option 1' },

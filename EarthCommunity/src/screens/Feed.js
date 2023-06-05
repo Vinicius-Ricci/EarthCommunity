@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'; 
+import {TouchableOpacity } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { StyleSheet } from 'react-native';
 import Start from './Start';
@@ -25,7 +26,9 @@ export default function Feed(){
       options={{
         tabBarLabel: 'Home',
         tabBarIcon: ({ color }) => (
+          <TouchableOpacity>
           <MaterialCommunityIcons name="home" color={color} size={26} />
+          </TouchableOpacity>
         ),
       }}
       

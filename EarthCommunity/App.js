@@ -3,6 +3,8 @@ import SignIn from './src/screens/SignIn';
 import SignUp from './src/screens/SignUp';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
 import Feed from './src/screens/Feed';
 
 const Stack = createStackNavigator();

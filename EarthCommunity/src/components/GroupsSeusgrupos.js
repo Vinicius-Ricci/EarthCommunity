@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Avatar } from '@react-native-material/core';
+import { Avatar} from '@react-native-material/core';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-const GroupsContainer = ({ group}) => {
+const GroupsSeusgrupos = ({ group }) => {
   const [userId, setUserId] = useState('');
   const [isDeleted, setIsDeleted] = useState(false);
   
@@ -18,19 +20,15 @@ const GroupsContainer = ({ group}) => {
     getUser();
   }, []);
 
-  const handleAddUserGroup = async ({group, userId}) => {
+  const handleAddUserGroup = async () => {
     try {
       const response = await axios.post(
         `https://earth-community-backend-production.up.railway.app/api/group/add-member/${group._id}/${userId}`
       );
       console.log(response.data);
-      console.log(userId);
-      console.log(group);
-      // setGroups(response.data.group);
-      // console.log('Group ID:', group._id);
-      // console.log('USER:', userId);
-      updateGroups(); // Atualiza o estado groups através da função passada como prop
-
+      setGroups(response.data.group);
+      console.log('Group ID:', group._id);
+      console.log('USER:', userId);
 
     } catch (error) {
       console.error(error);
@@ -41,6 +39,7 @@ const GroupsContainer = ({ group}) => {
 
   const handleDeleteGroup = async () => {
     try {
+
       const response = await axios.delete(
         `https://earth-community-backend-production.up.railway.app/api/group/delete/${group._id}/${userId}`
       );
@@ -56,16 +55,18 @@ const GroupsContainer = ({ group}) => {
 
   return (
     <View style={styles.viewContainer} key={group._id}>
-       <Avatar style={styles.avatar} image={{ uri: "https://media.gq-magazine.co.uk/photos/620529e268071f7ecff06fac/1:1/w_1080,h_1080,c_limit/100222_Bobba_hp.jpg" }} size={80} />
-       <Text style={styles.title}>{group.name}</Text>
-      <Text style={styles.subtitle}>{group.description}</Text>
-      <TouchableOpacity style={styles.button} onPress={handleAddUserGroup(group, userId)}>
+    <Avatar style={styles.avatar} image={{ uri: "https://media.gq-magazine.co.uk/photos/620529e268071f7ecff06fac/1:1/w_1080,h_1080,c_limit/100222_Bobba_hp.jpg" }} size={80} />
+    <Text style={styles.title}>{group.name}</Text>
+    <Text style={styles.subtitle}>{group.description}</Text>
+    <TouchableOpacity style={styles.button} onPress={handleAddUserGroup}>
+      <Icon name="pencil" size={24} color="black" /> {/* Ícone de lápis */}
       <Text style={styles.buttonText}>Entrar</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={handleDeleteGroup}>
+    </TouchableOpacity>
+    <TouchableOpacity style={styles.buttondelete} onPress={handleDeleteGroup}>
+      <Icon name="delete" size={24} color="red" /> {/* Ícone de deletar */}
       <Text style={styles.buttonText}>Deletar</Text>
-      </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
+  </View>
   );
 };
 
@@ -94,6 +95,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   button: {
+    flexDirection: 'row',
     width: 200,
     height: 40,
     borderRadius: 10,
@@ -102,6 +104,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: '4%',
 
+  },
+  buttondelete:{
+    width: 200,
+    height: 40,
+    borderRadius: 10,
+    backgroundColor: '#ffbbba',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   buttonText: {
     color: '#fff',
@@ -112,4 +122,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default GroupsContainer;
+export default GroupsSeusgrupos;

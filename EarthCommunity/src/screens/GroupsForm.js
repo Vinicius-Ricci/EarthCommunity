@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { View, StyleSheet } from 'react-native';
 import { TextInput, Text, Button } from "@react-native-material/core";
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function GroupsForm() {
+function GroupsForm() {
   const [name, setName] = useState('');
   const [image, setImage] = useState('');
   const [description, setDescription] = useState('');
@@ -12,6 +13,7 @@ export default function GroupsForm() {
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
   const [userId, setUserId] = useState('');
+  const navigation = useNavigation();
 
   useEffect(() => {
     const getUser = async () => {
@@ -23,15 +25,24 @@ export default function GroupsForm() {
     getUser();
   }, []);
 
+  useFocusEffect(
+    useCallback(() => {
+      setName('');
+      setImage('');
+      setDescription('');
+      setCategory('');
+      setCity('');
+      setState('');
+    }, [])
+  );
+
   async function handleCreateGroup() {
     try {
       if (!userId) {
-      // Verifica se o userId está definido antes de fazer a solicitação
-      console.error("ID do usuário não está definid");
-      console.log(userId);
+        console.error("ID do usuário não está definido");
+        return;
+      }
 
-      return;
-    }
       const response = await axios.post(`https://earth-community-backend-production.up.railway.app/api/group/create/${userId}`, {
         name: name,
         image: image,
@@ -40,15 +51,17 @@ export default function GroupsForm() {
         headOffice: {
           city: city,
           state: state,
-        }
+        } 
       });
+
       console.log(response.data);
-      const group = response.data.group;
-      await AsyncStorage.setItem('group', JSON.stringify(group));
+ 
+      navigation.navigate('Groups');
     } catch (error) {
       console.error(error);
     }
   }
+
 
   return (
     <View style={styles.container}>
@@ -73,3 +86,4 @@ const styles = StyleSheet.create({
     marginTop: 70,
   },
 });
+export default GroupsForm;
