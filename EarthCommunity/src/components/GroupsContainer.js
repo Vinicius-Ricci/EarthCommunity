@@ -18,19 +18,15 @@ const GroupsContainer = ({ group}) => {
     getUser();
   }, []);
 
-  const handleAddUserGroup = async ({group, userId}) => {
+  const handleAddUserGroup = async () => {
     try {
       const response = await axios.post(
         `https://earth-community-backend-production.up.railway.app/api/group/add-member/${group._id}/${userId}`
       );
       console.log(response.data);
-      console.log(userId);
-      console.log(group);
-      // setGroups(response.data.group);
-      // console.log('Group ID:', group._id);
-      // console.log('USER:', userId);
-      updateGroups(); // Atualiza o estado groups através da função passada como prop
-
+      setGroups(response.data.group);
+      console.log('Group ID:', group._id);
+      console.log('USER:', userId);
 
     } catch (error) {
       console.error(error);
@@ -59,7 +55,7 @@ const GroupsContainer = ({ group}) => {
        <Avatar style={styles.avatar} image={{ uri: "https://media.gq-magazine.co.uk/photos/620529e268071f7ecff06fac/1:1/w_1080,h_1080,c_limit/100222_Bobba_hp.jpg" }} size={80} />
        <Text style={styles.title}>{group.name}</Text>
       <Text style={styles.subtitle}>{group.description}</Text>
-      <TouchableOpacity style={styles.button} onPress={handleAddUserGroup(group, userId)}>
+      <TouchableOpacity style={styles.button} onPress={handleAddUserGroup}>
       <Text style={styles.buttonText}>Entrar</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={handleDeleteGroup}>

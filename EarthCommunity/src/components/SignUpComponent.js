@@ -33,7 +33,7 @@ export default function SignUpComponent() {
   return (
     <View style={styles.container}>
       <Text variant="h5" style={{ textAlign: 'center', paddingBottom: 50 }}>Sign Up</Text>
-      <TextInput variant="standard" color='#62D2A2' label="Name" style={{ margin: 25 }} onChangeText={setFirstName} />
+      <TextInput variant="standard" color='#62D2A2' value={firstName} label="Name" style={{ margin: 25 }} onChangeText={setFirstName} />
       <TextInput variant="standard" color='#62D2A2' label="Surname" style={{ margin: 25 }} onChangeText={setSurName} />
       <TextInput variant="standard" color='#62D2A2' label="E-mail" style={{ margin: 25 }} onChangeText={setEmail} />
       <TextInput variant="standard" color='#62D2A2' label="Password" style={{ margin: 25 }} onChangeText={setPassword} />
