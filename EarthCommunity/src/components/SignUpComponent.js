@@ -11,8 +11,7 @@ export default function SignUpComponent() {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleSignUpPress = async () => {
-    await handleSignUp(email, password, navigation, setError);
-  };
+    await handleSignUp(firstName, surname, email, password, confirmPassword);  };
 
   return (
     <View style={styles.container}>
