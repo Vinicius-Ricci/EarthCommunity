@@ -9,9 +9,10 @@ export default function SignUpComponent() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-
+  
   const handleSignUpPress = async () => {
-    await handleSignUp(firstName, surname, email, password, confirmPassword);  };
+    await handleSignUp(firstName, surname, email, password, confirmPassword);
+  };
 
   return (
     <View style={styles.container}>

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export async function handleSignUp() {
+export async function handleSignUp(firstName, surname, email, password, confirmPassword) {
     try {
       const response = await axios.post('https://earth-community-backend-dev.up.railway.app/api/auth/user/sign-up', {
         info: {
