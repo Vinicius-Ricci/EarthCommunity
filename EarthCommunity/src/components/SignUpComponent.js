@@ -3,14 +3,16 @@ import { View, StyleSheet } from 'react-native';
 import { TextInput, Text, Button } from "@react-native-material/core";
 import { handleSignUp } from '../API/SignUpAPI';
 
+
 export default function SignUpComponent() {
   const [firstName, setFirstName] = useState('');
   const [surname, setSurName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  
-  const handleSignUpPress = async () => {
+
+
+ const handleSignUpPress = async () => {
     await handleSignUp(firstName, surname, email, password, confirmPassword);
   };
 

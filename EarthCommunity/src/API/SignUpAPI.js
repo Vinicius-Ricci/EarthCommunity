@@ -12,9 +12,12 @@ export async function handleSignUp(firstName, surname, email, password, confirmP
           authWith: "manually",
           password: password,
           confirmPassword: confirmPassword,
+
         }
       });
       console.log(response.data); 
+
+
     } catch (error) {
       console.error(error);
     }
