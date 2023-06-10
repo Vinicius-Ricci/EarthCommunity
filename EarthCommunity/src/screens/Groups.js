@@ -1,21 +1,22 @@
-import { Text } from '@react-native-material/core';
 import React, { useState, useEffect } from 'react';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { useNavigation} from '@react-navigation/native';
 import WavesComponentGroups from '../components/WavesComponentGroups';
-import { StyleSheet, View, ScrollView, TextInput,TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, View, ScrollView, TextInput, TouchableOpacity, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import GroupsContainer from '../components/GroupsContainer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import GroupsSeusgrupos from '../components/GroupsSeusgrupos';
 import axios from "axios";
+
 
 export default function Groups() {
   const [selectedTab, setSelectedTab] = useState('seusGrupos');
   const [groups, setGroups] = useState([]);
+  const [groupId, setGroupId] = useState('');
   const navigation = useNavigation();
   const [userId, setUserId] = useState('');
-  const [search, setSearchText]=useState('');
-  
+  const [search, setSearchText] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+
   useEffect(() => {
     const getUser = async () => {
       const userString = await AsyncStorage.getItem('user');
@@ -26,25 +27,28 @@ export default function Groups() {
     getUser();
   }, []);
 
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "https://earth-community-backend-production.up.railway.app/api/group/get-all"
+          "https://earth-community-backend-dev.up.railway.app/api/group/get-all"
         );
         setGroups(response.data.group);
-        // console.log(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error(error);
       }
-    };fetchData()
+    };
 
-  },); // Fetch data when the screen is focused
+    fetchData();
+  }, []);
+
 
   const updateGroups = async () => {
     try {
       const response = await axios.get(
-        "https://earth-community-backend-production.up.railway.app/api/group/get-all"
+        "https://earth-community-backend-dev.up.railway.app/api/group/get-all"
       );
       setGroups(response.data.group);
       console.log(response.data);
@@ -57,43 +61,31 @@ export default function Groups() {
     navigation.navigate('GroupsForm', { updateGroups });
   }
 
-  // const SearchGroup = async (group) => {
-  //   try {
-  //     const response = await axios.get(
-  //       `https://earth-community-backend-production.up.railway.app/api/group/get-by-id/${group._id}`
-  //     );
-  //     setSearchText(response.data.group);
-  //     console.log(response.data);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-
+  
 
   const handleTabPress = (tabName) => {
     setSelectedTab(tabName);
   };
-  const windowWidth = Dimensions.get('window').width;
 
   return (
     <ScrollView>
       <WavesComponentGroups />
       <TouchableOpacity style={styles.overlay} onPress={handleForm}>
-        <Ionicons name="add" size={40} color="#696969" style={{fontWeight:'bold'}} />
-        <Text style={{color:"#696969",fontWeight:'bold'}}>Novo Grupo</Text>
+        <Ionicons name="add" size={40} color="#696969" style={{ fontWeight: 'bold' }} />
+        <Text style={{ color: "#696969", fontWeight: 'bold' }}>Novo Grupo</Text>
       </TouchableOpacity>
-      {/* <View style={styles.tabContainer}>
-      <TextInput
-        style={styles.input}
-        placeholder="Search"
-        placeholderTextColor="#888"
-        onChangeText={setSearchText}
-        value={search}
-      />
-       <TouchableOpacity onPress={SearchGroup}>
-        <Text>Pesquisar</Text>
-       </TouchableOpacity>
-      </View> */}
+      <View style={styles.tabContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Pesquise um grupo aqui..."
+          placeholderTextColor="#888"
+          onChangeText={setSearchText}
+          value={search}
+        />
+
+        
+
+      </View>
       <View style={styles.tabContainer}>
         <TouchableOpacity
           style={[styles.tabButton, selectedTab === 'seusGrupos' && styles.activeTabButton]}
@@ -102,20 +94,20 @@ export default function Groups() {
           <Text style={[styles.tabText, selectedTab === 'seusGrupos' && styles.activeTabText]}>
             Seus grupos
           </Text>
+          </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.tabButton, selectedTab === 'participando' && styles.activeTabButton]}
+          onPress={() => handleTabPress('participando')}
+        >
+          <Text style={[styles.tabText, selectedTab === 'participando' && styles.activeTabText]}>
+            Participando
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.tabButton, selectedTab === 'explorar' && styles.activeTabButton]}
           onPress={() => handleTabPress('explorar')}
         >
           <Text style={[styles.tabText, selectedTab === 'explorar' && styles.activeTabText]}>
-            Participando
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.tabButton, selectedTab === 'criadosporvc' && styles.activeTabButton]}
-          onPress={() => handleTabPress('criadosporvc')}
-        >
-          <Text style={[styles.tabText, selectedTab === 'criadosporvc' && styles.activeTabText]}>
             Explorar
           </Text>
         </TouchableOpacity>
@@ -123,33 +115,29 @@ export default function Groups() {
       {selectedTab === 'seusGrupos' ? (
   <View style={styles.groupsContainer}>
     {Array.isArray(groups) ? (
-      groups.map((group) => (
-        <GroupsContainer key={group.id} group={group} style={styles.groupsItem} />        
-      ))
+      groups
+        .filter(group => group.name.includes(search))
+        .map(group => (
+          <GroupsContainer key={group._id} group={group} style={styles.groupsItem} />
+        ))
     ) : (
       <Text>No groups available</Text>
     )}
   </View>
-) : selectedTab === 'participando' ? (
-  // <View style={styles.groupsContainer}>
-  //   {Array.isArray(groups) ? (
-  //     groups.map((group) => (
-  //       <GroupsContainer key={group.id} group={group} style={styles.groupsItem} />
-  //     ))
-  //   ) : (
-  //     <Text>No groups available</Text>
-  //   )}
-  // </View>
-  <Text>teste</Text>
-) : selectedTab === 'explorar' ? (
-  <View style={styles.explorarView}>
-    <Text>Conteúdo da view "Criados por você"</Text>
-  </View>
-) : (
-  <View style={styles.explorarView}>
-    <Text>Conteúdo da nova opção</Text>
-  </View>
-)}
+) :selectedTab === 'participando' ? (
+        <View style={styles.explorarView}>
+              <Text>Conteúdo da nova opção</Text>
+            </View>
+      
+      ) : selectedTab === 'explorar' ? (
+        <View style={styles.explorarView}>
+          <Text>Conteúdo da view "Criados por você"</Text>
+        </View>
+      ) : (
+            <View style={styles.explorarView}>
+              <Text>Conteúdo da nova opção</Text>
+            </View>
+          )}
 
     </ScrollView>
   );
@@ -195,17 +183,15 @@ const styles = StyleSheet.create({
   seusGruposView: {
     backgroundColor: 'lightgreen',
     padding: 20,
-        borderRadius: 10,
-      },
-      groupsContainer:{
-        width:'100%',
+    borderRadius: 10,
+  },
+  groupsContainer: {
+    width: '100%',
+  },
+  groupsItem: {
+    // width: '48%',
+    marginBottom: '10%',
+  },
 
+});
 
-      },
-      groupsItem: {
-        // width: '48%',
-        marginBottom: '10%',
-      },
-      
-  
-    });

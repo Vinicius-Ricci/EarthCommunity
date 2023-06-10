@@ -4,9 +4,7 @@ import { View, StyleSheet, Pressable, Button} from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import styleGlobal from '../style/styleGlobal';
 import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-import axios from 'axios';
+import { handleSignIn } from '../API/SignInAPI';
 
 export default function SignInComponent(){
 
@@ -16,29 +14,12 @@ export default function SignInComponent(){
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
 
-    async function handleSignIn() {
-        try {
-          const response = await axios.post('https://earth-community-backend-production.up.railway.app/api/auth/user/sign-in', {
-            info: {
-              email: email
-            },
-            security: {
-              password: password,
-            }
-          });
-          console.log(response.data); 
-          const user = response.data.user;
-          await AsyncStorage.setItem('user', JSON.stringify(user));
-          navigation.navigate('Feed')
 
+    
+    const handleSignInPress = async () => {
+      await handleSignIn(email, password, navigation, setError);
+    };
 
-
-        } catch (error) {
-          console.error(error);
-          setError("E-mail e/ou senha incorretos");
-
-        }
-      } 
 
     return(
         <View style={styles.container}>
@@ -51,7 +32,7 @@ export default function SignInComponent(){
                     <View style={{flexDirection: 'row', margin: 25, alignItems: 'center', }}>
                         <Text variant="h5">Sign in</Text>
                         <Spacer/>
-                        <Pressable style={styles.button} onPress={handleSignIn}>
+                        <Pressable style={styles.button} onPress={handleSignInPress}>
                             <AntDesign name="arrowright" size={24} color="#FFFFFF"/>
                             
                         </Pressable>   

@@ -43,7 +43,7 @@ function GroupsForm() {
         return;
       }
 
-      const response = await axios.post(`https://earth-community-backend-production.up.railway.app/api/group/create/${userId}`, {
+      const response = await axios.post(`https://earth-community-backend-dev.up.railway.app/api/group/create/${userId}`, {
         name: name,
         image: image,
         description: description,

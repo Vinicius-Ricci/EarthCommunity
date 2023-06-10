@@ -13,6 +13,8 @@ const GroupsContainer = ({ group}) => {
       const userString = await AsyncStorage.getItem('user');
       const user = JSON.parse(userString);
       setUserId(user._id);
+      console.log(group);
+
     };
 
     getUser();
@@ -21,12 +23,13 @@ const GroupsContainer = ({ group}) => {
   const handleAddUserGroup = async () => {
     try {
       const response = await axios.post(
-        `https://earth-community-backend-production.up.railway.app/api/group/add-member/${group._id}/${userId}`
+        `https://earth-community-backend-dev.up.railway.app/api/group/add-member/${group._id}/${userId}`
       );
       console.log(response.data);
+      console.log(userId);
+      console.log(group);
       setGroups(response.data.group);
-      console.log('Group ID:', group._id);
-      console.log('USER:', userId);
+        updateGroups()
 
     } catch (error) {
       console.error(error);
@@ -38,7 +41,7 @@ const GroupsContainer = ({ group}) => {
   const handleDeleteGroup = async () => {
     try {
       const response = await axios.delete(
-        `https://earth-community-backend-production.up.railway.app/api/group/delete/${group._id}/${userId}`
+        `https://earth-community-backend-dev.up.railway.app/api/group/delete/${group._id}/${userId}`
       );
       console.log(response.data);
             setIsDeleted(true); 
