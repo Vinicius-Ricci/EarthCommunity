@@ -14,10 +14,22 @@ export default function UserProfileComponent() {
   return (
     <View style={styles.container}>
       <View style={styles.profileContainer}>
-        <Avatar.Image source={require('../img/avatar.png')} size={100} />
-        {isEditing ? (
-          <Button title="Change Photo" onPress={() => console.log('Trocar foto de perfil')} />
-        ) : null}
+        <Avatar.Image
+          source={require('../img/avatar.png')}
+          size={100}
+          style={styles.avatar}
+          theme={{ colors: { primary: '#17B978' } }}
+        />
+        {isEditing && (
+          <Button
+            mode="outlined"
+            onPress={() => console.log('Trocar foto de perfil')}
+            style={styles.changePhotoButton}
+            theme={{ colors: { primary: '#17B978' } }}
+          >
+            Change Photo
+          </Button>
+        )}
       </View>
       <View style={styles.nameContainer}>
         {isEditing ? (
@@ -25,14 +37,20 @@ export default function UserProfileComponent() {
             value={name}
             onChangeText={setName}
             style={styles.input}
+            mode="outlined"
+            label="Name"
           />
         ) : (
           <Text style={styles.nameText}>{name}</Text>
         )}
         {isEditing ? (
-          <Button title="Save" onPress={saveChanges} />
+          <Button mode="contained" onPress={saveChanges} style={styles.saveButton} theme={{ colors: { primary: '#17B978' } }}>
+            Save
+          </Button>
         ) : (
-          <Button title="Edit" onPress={() => setIsEditing(true)} />
+          <Button mode="outlined" onPress={() => setIsEditing(true)} style={styles.editButton} theme={{ colors: { primary: '#17B978' } }}>
+            Edit
+          </Button>
         )}
       </View>
     </View>
@@ -43,11 +61,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
+    marginTop: 20,
     alignItems: 'center',
   },
   profileContainer: {
     alignItems: 'center',
     marginBottom: 20,
+  },
+  avatar: {
+    marginBottom: 10,
+  },
+  changePhotoButton: {
+    marginBottom: 10,
   },
   nameContainer: {
     alignItems: 'center',
@@ -60,6 +85,12 @@ const styles = StyleSheet.create({
   nameText: {
     fontSize: 18,
     fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  saveButton: {
+    marginBottom: 10,
+  },
+  editButton: {
     marginBottom: 10,
   },
 });
