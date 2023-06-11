@@ -22,13 +22,14 @@ const [selectedValue, setSelectedValue] = useState('');
   const [groups, setGroups] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [userId, setUserId] = useState('');
+  const [posts, setPosts] = useState([]);
 
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "https://earth-community-backend-dev.up.railway.app/api/post/get-all"
+          "https://earth-community-backend-dev.up.railway.app/api/group/get-all"
         );
         console.log(response.data);
       } catch (error) {
@@ -42,6 +43,20 @@ const [selectedValue, setSelectedValue] = useState('');
 
 
 
+      useEffect(() => {
+        const AtualizarGrupos = async () => {
+          try {
+            const response = await axios.get(
+              "https://earth-community-backend-dev.up.railway.app/api/post/get-all"
+            );
+            console.log(response.data);
+          } catch (error) {
+            console.error(error);
+          }
+        };
+    
+        AtualizarGrupos();
+      }, []);
     
   useEffect(() => {
     const getUser = async () => {
@@ -105,7 +120,7 @@ const [selectedValue, setSelectedValue] = useState('');
 
 
       const response = await axios.post(
-        'https://earth-community-backend-dev.up.railway.app/api/post/create/6481f8bc6da34e6ccd77df48/64813d6c057179de400fd6b2',
+        `https://earth-community-backend-dev.up.railway.app/api/post/create/6481f8bc6da34e6ccd77df48/648601b1ed4f15f74fce99c7`,
         {
           text: inputValue,
           image: downloadURL,
@@ -114,10 +129,26 @@ const [selectedValue, setSelectedValue] = useState('');
       );
 
       console.log(response.data);
-      navigation.navigate('Feed');
+   const updatedPosts = [...posts];
+      updatedPosts.unshift(response.data);
+      setPosts(updatedPosts);
+
+      // Limpa o estado
+      setInputValue('');
+      setImage(null);
+      setSelectedValue('');
+      setSelectedItem(null);
+
+      // Mostra uma mensagem de sucesso
+      Alert.alert('Post criado com sucesso!');
+
     } catch (error) {
       console.error(error);
+      Alert.alert('Ocorreu um erro ao criar o post. Por favor, tente novamente.');
     }
+  
+
+    
   }
   
     return(

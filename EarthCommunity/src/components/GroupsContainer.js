@@ -7,6 +7,7 @@ import axios from 'axios';
 const GroupsContainer = ({ group}) => {
   const [userId, setUserId] = useState('');
   const [isDeleted, setIsDeleted] = useState(false);
+  const [groups, setGroups]= useState('');
   
   useEffect(() => {
     const getUser = async () => {
@@ -20,21 +21,21 @@ const GroupsContainer = ({ group}) => {
     getUser();
   }, []);
 
-  const handleAddUserGroup = async () => {
+  const handleAddUserGroup = async (group) => {
     try {
       const response = await axios.post(
-        `https://earth-community-backend-dev.up.railway.app/api/group/add-member/${group._id}/${userId}`
+          `https://earth-community-backend-dev.up.railway.app/api/group/add-member/6481f8bc6da34e6ccd77df48/${userId}`
       );
       console.log(response.data);
       console.log(userId);
       console.log(group);
-      setGroups(response.data.group);
-        updateGroups()
+        // updateGroups()
 
     } catch (error) {
       console.error(error);
       console.log('Group ID:', group._id);
       console.log('USER:', userId);
+      console.log('Error message:', error.message); //
     }
   };
 
@@ -53,6 +54,19 @@ const GroupsContainer = ({ group}) => {
     return null;
   }
 
+
+  const handleDeleteUserGroup = async () => {
+    try {
+      const response = await axios.delete(
+        `https://earth-community-backend-dev.up.railway.app/api/group/remove-member/${group._id}/${userId}`
+        );
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
+
   return (
     <View style={styles.viewContainer} key={group._id}>
        <Avatar style={styles.avatar} image={{ uri: "https://media.gq-magazine.co.uk/photos/620529e268071f7ecff06fac/1:1/w_1080,h_1080,c_limit/100222_Bobba_hp.jpg" }} size={80} />
@@ -61,7 +75,7 @@ const GroupsContainer = ({ group}) => {
       <TouchableOpacity style={styles.button} onPress={handleAddUserGroup}>
       <Text style={styles.buttonText}>Entrar</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={handleDeleteGroup}>
+      <TouchableOpacity style={styles.button} onPress={handleDeleteUserGroup}>
       <Text style={styles.buttonText}>Deletar</Text>
       </TouchableOpacity>
     </View>

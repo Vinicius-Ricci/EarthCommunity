@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { TextInput, Text, Button } from "@react-native-material/core";
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {fetchData} from '../API/GroupsAPI'
 
 function GroupsForm() {
   const [name, setName] = useState('');
@@ -55,6 +56,7 @@ function GroupsForm() {
       });
 
       console.log(response.data);
+      await fetchData()
  
       navigation.navigate('Groups');
     } catch (error) {
@@ -65,6 +67,7 @@ function GroupsForm() {
 
   return (
     <View style={styles.container}>
+      <ScrollView>
       <Text variant="h5" style={{ textAlign: 'center', paddingBottom: 50 }}>Criar um novo Grupo</Text>
       <TextInput variant="standard" color='#62D2A2' label="Nome do grupo" value={name} style={{ margin: 25 }} onChangeText={setName} />
       <TextInput variant="standard" color='#62D2A2' label="Imagem" value={image} style={{ margin: 25 }} onChangeText={setImage} />
@@ -74,6 +77,7 @@ function GroupsForm() {
       <TextInput variant="standard" color='#62D2A2' label="Cidade" value={city} style={{ margin: 25 }} onChangeText={setCity} />
 
       <Button title="Cadastrar" onPress={handleCreateGroup} color='#62D2A2' style={{ margin: 25 }} />
+      </ScrollView>
     </View>
   );
 }
