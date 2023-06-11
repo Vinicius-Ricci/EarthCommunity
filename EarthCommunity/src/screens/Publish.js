@@ -1,56 +1,125 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, Image,Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Text, TouchableOpacity, Image,Alert,Picker } from 'react-native';
 // import ModalSelector from 'react-native-modal-selector';
 import { TextInput, Button, Avatar, SendIcon} from '@react-native-material/core';
 import { IconButton, MD3Colors} from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
 import {firebase} from '../../config';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { truncate } from 'uri-js';
+import { URI } from 'uri-js';
+
 
 
 export default function Publish(){
     const [inputValue, setInputValue] = useState('');
     const [image,setImage] = useState(null);
-    const [uploading, setUploading] = useState(false);
+    const [imageapi,setImageapi] = useState('');
 
-    const pickImage =async () =>{
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        aspect: [4,3],
-        quality:1,
-      });
-  
-      const source = {uri: result.uri};
-      console.log(source);
-      setImage(source);
-  
-    }
-  const uploadImage= async () =>{
+    const [uploading, setUploading] = useState(false);
+const [selectedValue, setSelectedValue] = useState('');
+  const [groups, setGroups] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [userId, setUserId] = useState('');
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "https://earth-community-backend-dev.up.railway.app/api/post/get-all"
+        );
+        console.log(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+      // // const source = {uri: result.uri};
+
+
+
+    
+  useEffect(() => {
+    const getUser = async () => {
+      const userString = await AsyncStorage.getItem('user');
+      const user = JSON.parse(userString);
+      setUserId(user._id);
+
+    };
+
+    getUser();
+  }, []);
+
+
+  const handleValueChange = (itemValue, itemIndex) => {
+    setSelectedValue(itemValue);
+
+    const selectedItem = groups.find((group) => group._id === itemValue);
+    setSelectedItem(selectedItem);
+    console.log(selectedItem)
+  };
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 0,
+    });
+   if (!result.cancelled) {
+    const source = { uri: result.uri };
+    console.log(source);
+    setImage(source);
+  }
+
+  }
+  const uploadImage = async () => {
     setUploading(true);
-    const response = await fetch(image.uri)
+    const response = await fetch(image.uri);
     const blob = await response.blob();
-    const filename = image.uri.substring(image.uri.lastIndexOf('/')+1);
+    const filename = image?.uri?.substring(image?.uri?.lastIndexOf('/') + 1); // Verificar se image.uri não é null ou undefined antes de acessar a propriedade uri
+    
     var ref = firebase.storage().ref().child('picture-post/' + filename).put(blob);
   
     try {
       await ref;
-  
-    } catch(e){
-      console.log(e)
+      const downloadURL = await ref.snapshot.ref.getDownloadURL();
+      return downloadURL; // Retorna a URL de download
+    } catch (e) {
+      console.log(e);
     }
   
     setUploading(false);
-    Alert.alert(
-      'Photo uploded!'
-    );
+    Alert.alert('Photo uploaded!');
     setImage(null);
-  
   };
+  
+    
+
+  async function handleCreatePost() {
+    try {
+      const downloadURL = await uploadImage(); // Aguarde a URL de download
 
 
+      const response = await axios.post(
+        'https://earth-community-backend-dev.up.railway.app/api/post/create/6481f8bc6da34e6ccd77df48/64813d6c057179de400fd6b2',
+        {
+          text: inputValue,
+          image: downloadURL,
+        }
+        
+      );
 
-
-
+      console.log(response.data);
+      navigation.navigate('Feed');
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  
     return(
         <View style={styles.container}>
             <View style={styles.publication}>
@@ -59,15 +128,38 @@ export default function Publish(){
                         <Avatar style={styles.avatar} image={{ uri: "https://media.gq-magazine.co.uk/photos/620529e268071f7ecff06fac/1:1/w_1080,h_1080,c_limit/100222_Bobba_hp.jpg" }} size={48} />
                         <View>
                      <Text style={styles.username}>Nome de Usuário</Text>
+                      <View>
+                      <Picker
+                        selectedValue={selectedValue}
+                        onValueChange={handleValueChange}
+                        style={styles.picker}
+                        itemStyle={styles.pickerItem}
+                      >
+                        {Array.isArray(groups) ? (
+                          groups.map(group => (
+                            <Picker.Item label={group.name} key={group._id}  value={group._id} />
+                          ))
+                        ) : (
+                          <Text>No groups available</Text>
+                        )}
+                      </Picker>
+                      </View>
 
                         </View>
                     </View>
 
 <TouchableOpacity
   style={styles.button} 
-  onPress={uploadImage}// Aplicando estilo de opacidade com base na função validateButton()
+  onPress={handleCreatePost}// Aplicando estilo de opacidade com base na função validateButton()
  >
   <Text style={styles.buttonText}>Publicar</Text>
+</TouchableOpacity>
+
+<TouchableOpacity
+  style={styles.button} 
+  onPress={uploadImage}// Aplicando estilo de opacidade com base na função validateButton()
+ >
+  <Text style={styles.buttonText}>foto</Text>
 </TouchableOpacity>
                 </View>
                 <TextInput
@@ -157,6 +249,29 @@ const styles = StyleSheet.create({
         marginLeft: 8,
         fontSize: 16,
     },
+picker: {
+  backgroundColor: 'white',
+  borderRadius: 5,
+  borderWidth: 0,
+  color: 'black',
+  fontSize: 16,
+  // width: '50%'
+},
+pickerItem: {
+  backgroundColor: '#62D2A2',
+},
+selectedItemContainer: {
+  marginTop: 20,
+  padding: 10,
+  backgroundColor: 'lightgray',
+},
+selectedItemText: {
+  fontWeight: 'bold',
+},
+
+
+
+
     textInput: {
         borderWidth: 0,
         marginLeft: 4,
