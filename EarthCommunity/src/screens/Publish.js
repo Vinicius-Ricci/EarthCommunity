@@ -15,14 +15,14 @@ import { URI } from 'uri-js';
 export default function Publish(){
     const [inputValue, setInputValue] = useState('');
     const [image,setImage] = useState(null);
-    const [imageapi,setImageapi] = useState('');
 
-    const [uploading, setUploading] = useState(false);
 const [selectedValue, setSelectedValue] = useState('');
   const [groups, setGroups] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [userId, setUserId] = useState('');
   const [posts, setPosts] = useState([]);
+  const [userGroups, setUserGroups] = useState([]);
+
 
 
   useEffect(() => {
@@ -32,10 +32,13 @@ const [selectedValue, setSelectedValue] = useState('');
           "https://earth-community-backend-dev.up.railway.app/api/group/get-all"
         );
         console.log(response.data);
+        const userGroups = response.data.group;
+        setGroups(userGroups);
+        setUserGroups(userGroups);
       } catch (error) {
         console.error(error);
       }
-    };
+    }
 
     fetchData();
   }, []);
@@ -91,6 +94,11 @@ const [selectedValue, setSelectedValue] = useState('');
   }
 
   }
+
+  const NoSelectImage = () => {
+    setImage(null);
+  };
+
   const uploadImage = async () => {
     setUploading(true);
     const response = await fetch(image.uri);
@@ -120,7 +128,7 @@ const [selectedValue, setSelectedValue] = useState('');
 
 
       const response = await axios.post(
-        `https://earth-community-backend-dev.up.railway.app/api/post/create/6481f8bc6da34e6ccd77df48/648601b1ed4f15f74fce99c7`,
+        `https://earth-community-backend-dev.up.railway.app/api/post/create/${userId}/${selectedValue}`,
         {
           text: inputValue,
           image: downloadURL,
@@ -166,13 +174,13 @@ const [selectedValue, setSelectedValue] = useState('');
                         style={styles.picker}
                         itemStyle={styles.pickerItem}
                       >
-                        {Array.isArray(groups) ? (
-                          groups.map(group => (
-                            <Picker.Item label={group.name} key={group._id}  value={group._id} />
-                          ))
-                        ) : (
-                          <Text>No groups available</Text>
-                        )}
+                       {Array.isArray(userGroups) && userGroups.length > 0 ? (
+    userGroups.map(group => (
+      <Picker.Item label={group.name} key={group._id} value={group._id} />
+    ))
+  ) : (
+    <Text>No groups available</Text>
+  )}
                       </Picker>
                       </View>
 
@@ -186,12 +194,6 @@ const [selectedValue, setSelectedValue] = useState('');
   <Text style={styles.buttonText}>Publicar</Text>
 </TouchableOpacity>
 
-<TouchableOpacity
-  style={styles.button} 
-  onPress={uploadImage}// Aplicando estilo de opacidade com base na função validateButton()
- >
-  <Text style={styles.buttonText}>foto</Text>
-</TouchableOpacity>
                 </View>
                 <TextInput
                     style={[styles.textInput]}
@@ -215,6 +217,7 @@ const [selectedValue, setSelectedValue] = useState('');
                             <Image source={{ uri: image.uri }} style={styles.image} />
                             </View>
 
+                          <View style={styles.flexDirection}> 
                              <View style={styles.iconcamera}> 
                                 <IconButton
                              icon="camera"
@@ -224,6 +227,17 @@ const [selectedValue, setSelectedValue] = useState('');
                          />
                           <Text>Trocar foto</Text>
                           </View>
+
+                          <TouchableOpacity onPress={NoSelectImage} style={styles.deleteButton}> 
+                                 <IconButton
+            icon="trash-can-outline"
+            style={{width:18}}
+            iconColor={MD3Colors.grey200}
+            size={20}
+          />
+                          <Text>Delete</Text>
+                          </TouchableOpacity>
+                         </View>
                          </View>
 
                             ) : null}
@@ -342,6 +356,10 @@ selectedItemText: {
         alignItems: 'center',
       },
 
+      flexDirection:{
+        flexDirection: 'row'
+      },
+
       iconcamera:{
         flexDirection: 'row',
         alignItems: 'center',
@@ -352,6 +370,13 @@ selectedItemText: {
       },
         labelStyle: {
     color: 'white',
+  },
+
+  deleteButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft:12,
+
   },
 
 });

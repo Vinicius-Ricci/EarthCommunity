@@ -24,7 +24,7 @@ const GroupsContainer = ({ group}) => {
   const handleAddUserGroup = async (group) => {
     try {
       const response = await axios.post(
-          `https://earth-community-backend-dev.up.railway.app/api/group/add-member/6481f8bc6da34e6ccd77df48/${userId}`
+          `https://earth-community-backend-dev.up.railway.app/api/group/add-member/648601b1ed4f15f74fce99c7/${userId}`
       );
       console.log(response.data);
       console.log(userId);

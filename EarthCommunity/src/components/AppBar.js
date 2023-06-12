@@ -19,7 +19,7 @@ export default function AppBarTop(){
 
 const styles = StyleSheet.create({
     AppBar: {
-        height: 100,
+        height: 80,
         width: '100%',
         alignItems: 'center',
         justifyContent: 'center',     
