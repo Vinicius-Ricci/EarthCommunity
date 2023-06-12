@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, Image,Alert,Picker } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Image,Alert } from 'react-native';
 // import ModalSelector from 'react-native-modal-selector';
 import { TextInput, Button, Avatar, SendIcon} from '@react-native-material/core';
 import { IconButton, MD3Colors} from 'react-native-paper';
@@ -7,8 +7,8 @@ import * as ImagePicker from 'expo-image-picker';
 import {firebase} from '../../config';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { truncate } from 'uri-js';
-import { URI } from 'uri-js';
+import { Picker } from '@react-native-picker/picker'; // Adicione essa linha
+
 
 
 
