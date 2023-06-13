@@ -1,21 +1,75 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Image, Text } from 'react-native';
 import { TextInput, Button, Provider } from 'react-native-paper';
+import * as ImagePicker from 'expo-image-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function InfoUserComponent() {
-  const [name, setName] = useState('Vinicius Ricci');
-  const [cpf, setCPF] = useState('765.853.906.84');
-  const [email, setEmail] = useState('viniciusteste@gmail.com');
-  const [dateOfBirth, setDateOfBirth] = useState('09/06/2002');
+export default function InfoUserComponent({ onUpdateName }) {
+  const [name, setName] = useState('');
+  const [cpf, setCPF] = useState('');
+  const [email, setEmail] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState('');
   const [isEditing, setIsEditing] = useState(false);
+  const [avatarUri, setAvatarUri] = useState(null);
+
+  useEffect(() => {
+    const getUser = async () => {
+      const userString = await AsyncStorage.getItem('user');
+      const user = JSON.parse(userString);
+      setName(user.info.firstName);
+      setCPF(user.info.cpf);
+      setEmail(user.info.email);
+      setDateOfBirth(user.info.dateOfBirth);
+      setAvatarUri(user.avatarUri);
+    };
+
+    getUser();
+  }, []);
 
   const saveChanges = () => {
     setIsEditing(false);
+    onUpdateName(name); // Atualiza o nome no componente pai
+
+    // Salva a imagem do avatar no AsyncStorage
+    AsyncStorage.setItem('avatarUri', avatarUri);
+  };
+
+  const pickImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      console.log('Permission denied');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync();
+    if (!result.cancelled) {
+      setAvatarUri(result.uri);
+    }
   };
 
   return (
     <Provider>
       <View style={styles.container}>
+        <View style={styles.avatarContainer}>
+          {avatarUri ? (
+            <Image source={{ uri: avatarUri }} style={styles.avatar} />
+          ) : (
+            <Image source={require('../img/default-avatar.png')} style={styles.avatar} />
+          )}
+          <Text style={styles.nameText}>{name}</Text>
+          {isEditing && (
+            <Button
+              mode="outlined"
+              onPress={pickImage}
+              style={[styles.changePhotoButton, { borderColor: '#17B978' }]}
+              color="#17B978"
+              labelStyle={{ color: '#17B978' }}
+            >
+              Change Photo
+            </Button>
+
+          )}
+        </View>
         <TextInput
           label="Name"
           value={name}
@@ -78,7 +132,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     margin: 10,
-    marginVertical: 10,
+    marginVertical: 100,
+  },
+  avatarContainer: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: 10,
+  },
+  changePhotoButton: {
+    marginBottom: 10,
+  },
+  nameText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
   input: {
     width: 350,
