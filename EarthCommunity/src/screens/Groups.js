@@ -11,6 +11,7 @@ import axios from "axios";
 export default function Groups() {
   const [selectedTab, setSelectedTab] = useState('seusGrupos');
   const [groups, setGroups] = useState([]);
+  const [participatingGroups, setParticipatingGroups] = useState([]);
   const [groupId, setGroupId] = useState('');
   const navigation = useNavigation();
   const [userId, setUserId] = useState('');
@@ -34,15 +35,16 @@ export default function Groups() {
         const response = await axios.get(
           "https://earth-community-backend-dev.up.railway.app/api/group/get-all"
         );
-        setGroups(response.data.group);
-        console.log(response.data);
+          
+      setGroups( response.data.groups);
+      console.log( response.data.groups);
       } catch (error) {
         console.error(error);
       }
     };
 
     fetchData();
-  }, []);
+  }, [updateGroups]);
 
 
   const updateGroups = async () => {
@@ -50,7 +52,7 @@ export default function Groups() {
       const response = await axios.get(
         "https://earth-community-backend-dev.up.railway.app/api/group/get-all"
       );
-      setGroups(response.data.group);
+      setGroups(response.data);
       console.log(response.data);
     } catch (error) {
       console.error(error);
@@ -77,13 +79,11 @@ export default function Groups() {
       <View style={styles.tabContainer}>
         <TextInput
           style={styles.input}
-          placeholder="Pesquise um grupo aqui..."
+          placeholder="Search"
           placeholderTextColor="#888"
           onChangeText={setSearchText}
           value={search}
         />
-
-        
 
       </View>
       <View style={styles.tabContainer}>
@@ -113,21 +113,26 @@ export default function Groups() {
         </TouchableOpacity>
       </View>
       {selectedTab === 'seusGrupos' ? (
-  <View style={styles.groupsContainer}>
-    {Array.isArray(groups) ? (
-      groups
-        .filter(group => group.name.includes(search))
-        .map(group => (
-          <GroupsContainer key={group._id} group={group} style={styles.groupsItem} />
-        ))
-    ) : (
-      <Text>No groups available</Text>
-    )}
-  </View>
+        <View style={styles.groupsContainer}>
+  {Array.isArray(groups) ? (
+    groups.map(group => (
+      <GroupsContainer key={group._id} group={group} style={styles.groupsItem} />
+    ))
+  ) : (
+    <Text>No groups available</Text>
+  )}
+</View>
+
 ) :selectedTab === 'participando' ? (
-        <View style={styles.explorarView}>
-              <Text>Conteúdo da nova opção</Text>
-            </View>
+  <View style={styles.groupsContainer}>
+  {Array.isArray(participatingGroups) && participatingGroups.length > 0 ? (
+  participatingGroups.map(group => (
+  <GroupsContainer key={group._id} group={group} style={styles.groupsItem} />
+  ))
+  ) : (
+  <Text>Não há grupos em que você está participando</Text>
+  )}
+  </View>
       
       ) : selectedTab === 'explorar' ? (
         <View style={styles.explorarView}>

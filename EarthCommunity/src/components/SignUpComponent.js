@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { TextInput, Text, Button } from "@react-native-material/core";
 import { handleSignUp } from '../API/SignUpAPI';
+import { useNavigation } from '@react-navigation/native';
+
 
 
 export default function SignUpComponent() {
@@ -10,6 +12,9 @@ export default function SignUpComponent() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
+  const navigation = useNavigation();
+
 
 
  const handleSignUpPress = async () => {

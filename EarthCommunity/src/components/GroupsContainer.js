@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+
+
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Avatar } from '@react-native-material/core';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-const GroupsContainer = ({ group}) => {
+const GroupsContainer = ({group}) => {
   const [userId, setUserId] = useState('');
   const [isDeleted, setIsDeleted] = useState(false);
   const [groups, setGroups]= useState('');
@@ -21,10 +23,10 @@ const GroupsContainer = ({ group}) => {
     getUser();
   }, []);
 
-  const handleAddUserGroup = async (group) => {
+  const handleAddUserGroup = async () => {
     try {
       const response = await axios.post(
-          `https://earth-community-backend-dev.up.railway.app/api/group/add-member/648601b1ed4f15f74fce99c7/${userId}`
+          `https://earth-community-backend-dev.up.railway.app/api/group/add-member/${group._id}/${userId}`
       );
       console.log(response.data);
       console.log(userId);

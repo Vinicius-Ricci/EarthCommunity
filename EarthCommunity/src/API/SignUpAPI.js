@@ -1,6 +1,8 @@
 import axios from 'axios';
 
+
 export async function handleSignUp(firstName, surname, email, password, confirmPassword) {
+
     try {
       const response = await axios.post('https://earth-community-backend-dev.up.railway.app/api/auth/user/sign-up', {
         info: {
@@ -15,7 +17,9 @@ export async function handleSignUp(firstName, surname, email, password, confirmP
 
         }
       });
-      console.log(response.data); 
+      console.log(response.data);
+      navigation.navigate('Home');
+ 
 
 
     } catch (error) {

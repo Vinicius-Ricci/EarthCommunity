@@ -167,7 +167,6 @@ const [selectedValue, setSelectedValue] = useState('');
                         <Avatar style={styles.avatar} image={{ uri: "https://media.gq-magazine.co.uk/photos/620529e268071f7ecff06fac/1:1/w_1080,h_1080,c_limit/100222_Bobba_hp.jpg" }} size={48} />
                         <View>
                      <Text style={styles.username}>Nome de Usuário</Text>
-                      <View>
                       <Picker
                         selectedValue={selectedValue}
                         onValueChange={handleValueChange}
@@ -182,7 +181,6 @@ const [selectedValue, setSelectedValue] = useState('');
     <Text>No groups available</Text>
   )}
                       </Picker>
-                      </View>
 
                         </View>
                     </View>
@@ -300,7 +298,7 @@ picker: {
   borderWidth: 0,
   color: 'black',
   fontSize: 16,
-  // width: '50%'
+  width: '80%'
 },
 pickerItem: {
   backgroundColor: '#62D2A2',
