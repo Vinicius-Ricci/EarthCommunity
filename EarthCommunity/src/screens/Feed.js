@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'; 
-import {TouchableOpacity } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { StyleSheet } from 'react-native';
 import Start from './Start';
@@ -10,73 +9,75 @@ import Profile from './Profile';
 import Publish from './Publish';
 import styleGlobal from '../style/styleGlobal';
 
-export default function Feed(){
+const TabB = createMaterialBottomTabNavigator();
 
-  const TabB = createMaterialBottomTabNavigator();
-
-    return(
+export default function Feed() {
+  return (
     <TabB.Navigator
-    activeColor="#ffff"
-    inactiveColor="#6c757d"
-    barStyle={{ backgroundColor: '#17B978' }}
+      activeColor="#ffff"
+      inactiveColor="#6c757d"
+      barStyle={{ backgroundColor: '#17B978' }}
     >
       <TabB.Screen 
-      name="Home" 
-      component={Start} 
-      options={{
-        tabBarLabel: 'Home',
-        tabBarIcon: ({ color }) => (
-          <TouchableOpacity>
-          <MaterialCommunityIcons name="home" color={color} size={26} />
-          </TouchableOpacity>
-        ),
-      }}
-      
+        name="Home" 
+        component={Start} 
+        options={{
+          tabBarLabel: 'Início',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="home" color={color} size={26} />
+          ),
+        }}
       />
       <TabB.Screen 
-      name="Groups" 
-      component={Groups} 
-      options={{
-        tabBarLabel: 'Groups',
-        tabBarIcon: ({ color }) => (
-          <MaterialCommunityIcons name="account-group" color={color} size={26} />
-        ),
-      }}
-      />
-         <TabB.Screen 
-      name="GroupsForm" 
-      component={GroupsForm} 
+        name="Publish" 
+        component={Publish} 
+        options={{
+          tabBarLabel: 'Publicar',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="plus-circle" color={color} size={26} />
+          ),
+        }}
       />
       <TabB.Screen 
-      name="Publish" 
-      component={Publish} 
-      options={{
-        tabBarLabel: 'Publish',
-        tabBarIcon: ({ color }) => (
-          <MaterialCommunityIcons name="plus-circle" color={color} size={26} />
-        ),
-      }}
+        name="Groups" 
+        component={Groups} 
+        options={{
+          tabBarLabel: 'Grupos',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="account-group" color={color} size={26} />
+          ),
+        }}
       />
       <TabB.Screen 
-      name="Profile" 
-      component={Profile} 
-      options={{
-        tabBarLabel: 'Profile',
-        tabBarIcon: ({ color }) => (
-          <MaterialCommunityIcons name="account-circle" color={color} size={26} />
-        ),
-      }}
+        name="GroupsForm" 
+        component={GroupsForm} 
+        options={{
+          tabBarLabel: 'Novo Grupo',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="form-select" color={color} size={26} />
+          ),
+        }}
+      />
+    
+      <TabB.Screen 
+        name="Profile" 
+        component={Profile} 
+        options={{
+          tabBarLabel: 'Perfil',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="account-circle" color={color} size={26} />
+          ),
+        }}
       />
     </TabB.Navigator>
-    )
+  )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: styleGlobal.colors.white,
-      },
-
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: styleGlobal.colors.white,
+  },
 });
