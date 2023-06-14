@@ -9,17 +9,17 @@ import axios from 'axios';
 const GroupsContainer = ({group}) => {
   const [userId, setUserId] = useState('');
   const [isDeleted, setIsDeleted] = useState(false);
-  const [groups, setGroups]= useState('');
   
   useEffect(() => {
     const getUser = async () => {
       const userString = await AsyncStorage.getItem('user');
       const user = JSON.parse(userString);
-      setUserId(user._id);
-      console.log(group);
+      setUserId(user._id, () => {
+        console.log('USER:', userId);
+      });
+
 
     };
-
     getUser();
   }, []);
 
@@ -29,8 +29,8 @@ const GroupsContainer = ({group}) => {
           `https://earth-community-backend-dev.up.railway.app/api/group/add-member/${group._id}/${userId}`
       );
       console.log(response.data);
-      console.log(userId);
-      console.log(group);
+
+
         // updateGroups()
 
     } catch (error) {
@@ -63,6 +63,9 @@ const GroupsContainer = ({group}) => {
         `https://earth-community-backend-dev.up.railway.app/api/group/remove-member/${group._id}/${userId}`
         );
       console.log(response.data);
+      console.log(group);
+
+
     } catch (error) {
       console.error(error);
     }
@@ -77,8 +80,8 @@ const GroupsContainer = ({group}) => {
       <TouchableOpacity style={styles.button} onPress={handleAddUserGroup}>
       <Text style={styles.buttonText}>Entrar</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={handleDeleteUserGroup}>
-      <Text style={styles.buttonText}>Deletar</Text>
+      <TouchableOpacity style={styles.buttondelete} onPress={handleDeleteUserGroup}>
+      <Text style={styles.buttonText}>Sair do grupo</Text>
       </TouchableOpacity>
     </View>
   );
@@ -117,6 +120,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: '4%',
 
+  },
+  buttondelete:{
+    width: 200,
+    height: 40,
+    borderRadius: 10,
+    backgroundColor: '#fa5555',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: '4%',
   },
   buttonText: {
     color: '#fff',

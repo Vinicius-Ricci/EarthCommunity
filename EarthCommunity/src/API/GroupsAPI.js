@@ -12,17 +12,51 @@ export const addUserGroup = async (groupId, userId) => {
   }
 };
 
-export const fetchData = async () => {
+
+export const fetchAllGroups = async (userId, setParticipatingGroups, setUserGroups, setGroups) => {
   try {
     const response = await axios.get(
       "https://earth-community-backend-dev.up.railway.app/api/group/get-all"
     );
-    setGroups(response.data.group);
-    console.log(response.data);
+
+    const userGroups = response.data.groups.filter(group => {
+      return group.members.some(members => members.user._id === userId);
+    });
+
+    setParticipatingGroups(userGroups);
+    setUserGroups(userGroups);
+    setGroups(response.data.groups);
+    console.log(response.data.groups);
   } catch (error) {
     console.error(error);
   }
 };
+
+export const Usercreategroup = async (userId, setSeusGrupos) => {
+  try {
+    const response = await axios.get(`https://earth-community-backend-dev.up.railway.app/api/group/get-all?createdBy=${userId}`);
+    setSeusGrupos(response.data.groups);
+    console.log(response.data.groups);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
+export const fetchOtherGroups = async (userId, setOtherGroups) => {
+  try {
+    const response = await axios.get(
+      `https://earth-community-backend-dev.up.railway.app/api/group/get-all?createdBy_ne=${userId}&members.user._id_ne=${userId}`
+    );
+
+    setOtherGroups(response.data.groups);
+    console.log(response.data.groups);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
 
 export const deleteGroup = async (groupId, userId) => {
   try {
