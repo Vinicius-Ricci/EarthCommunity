@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Image, Text } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { TextInput, Button, Provider } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -11,6 +12,7 @@ export default function InfoUserComponent({ onUpdateName }) {
   const [dateOfBirth, setDateOfBirth] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [avatarUri, setAvatarUri] = useState(null);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const getUser = async () => {
@@ -28,10 +30,10 @@ export default function InfoUserComponent({ onUpdateName }) {
 
   const saveChanges = () => {
     setIsEditing(false);
-    onUpdateName(name); // Atualiza o nome no componente pai
+    //onUpdateName(name); // Atualiza o nome no componente pai
 
     // Salva a imagem do avatar no AsyncStorage
-    AsyncStorage.setItem('avatarUri', avatarUri);
+    //AsyncStorage.setItem('avatarUri', avatarUri);
   };
 
   const pickImage = async () => {
@@ -44,6 +46,17 @@ export default function InfoUserComponent({ onUpdateName }) {
     const result = await ImagePicker.launchImageLibraryAsync();
     if (!result.cancelled) {
       setAvatarUri(result.uri);
+    }
+  };
+
+  const handleClearStorage = async () => {
+    try {
+      await AsyncStorage.clear();
+      console.log('Dados do AsyncStorage limpos com sucesso!');
+      navigation.navigate('Sign In');
+
+    } catch (error) {
+      console.error('Erro ao limpar os dados do AsyncStorage:', error);
     }
   };
 
@@ -67,7 +80,6 @@ export default function InfoUserComponent({ onUpdateName }) {
             >
               Change Photo
             </Button>
-
           )}
         </View>
         <TextInput
@@ -76,7 +88,7 @@ export default function InfoUserComponent({ onUpdateName }) {
           onChangeText={setName}
           disabled={!isEditing}
           style={styles.input}
-          theme={{ colors: { primary: '#17B978' } }}
+          theme={{ colors: '#0000' }}
         />
         <TextInput
           label="CPF"
@@ -84,7 +96,7 @@ export default function InfoUserComponent({ onUpdateName }) {
           onChangeText={setCPF}
           disabled={!isEditing}
           style={styles.input}
-          theme={{ colors: { primary: '#17B978' } }}
+          theme={{ colors: '#0000' }}
         />
         <TextInput
           label="Email"
@@ -92,7 +104,7 @@ export default function InfoUserComponent({ onUpdateName }) {
           onChangeText={setEmail}
           disabled={!isEditing}
           style={styles.input}
-          theme={{ colors: { primary: '#17B978' } }}
+          theme={{ colors: '#0000' }}
         />
         <TextInput
           label="Date of Birth"
@@ -100,7 +112,7 @@ export default function InfoUserComponent({ onUpdateName }) {
           onChangeText={setDateOfBirth}
           disabled={!isEditing}
           style={styles.input}
-          theme={{ colors: { primary: '#17B978' } }}
+          theme={{ colors: '#0000' }}
         />
         <Button
           mode="contained"
@@ -119,6 +131,14 @@ export default function InfoUserComponent({ onUpdateName }) {
           labelStyle={styles.buttonText}
         >
           Edit
+        </Button>
+        <Button
+          mode="contained"
+          onPress={handleClearStorage}
+          style={styles.button}
+          labelStyle={styles.buttonText}
+        >
+          Logout
         </Button>
       </View>
     </Provider>
