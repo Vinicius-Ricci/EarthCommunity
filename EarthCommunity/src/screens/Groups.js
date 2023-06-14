@@ -36,24 +36,30 @@ export default function Groups() {
         const response = await axios.get(
           "https://earth-community-backend-dev.up.railway.app/api/group/get-all"
         );
-    
+  
         const userGroups = response.data.groups.filter(group => {
-          return group.members.some(members => members.user._id === userId);
+          return group.members.some(member => member.user._id === userId);
         });
-
+  
         setParticipatingGroups(userGroups);
         setUserGroups(userGroups);
-
+  
+        const createdGroups = response.data.groups.filter(group => {
+          return group.createdByUser === userId;
+        });
+  
+        setSeusGrupos(createdGroups);
+  
         setGroups(response.data.groups);
         console.log(response.data.groups);
       } catch (error) {
         console.error(error);
       }
     };
-
+  
     fetchData();
-  }, [groups]);
-
+  }, [userId]);
+  
   useEffect(() => {
     const fetchOtherGroups = async () => {
       try {
@@ -63,6 +69,7 @@ export default function Groups() {
 
         setOtherGroups(response.data.groups);
         console.log(response.data.groups);
+        
       } catch (error) {
         console.error(error);
       }
@@ -73,22 +80,9 @@ export default function Groups() {
     }
   }, [selectedTab, userId]);
 
-  const Usercreategroup = async () => {
-    try {
-      const response = await axios.get(
-        `https://earth-community-backend-dev.up.railway.app/api/group/get-all?createdBy=${userId}`
-      );
-      
-      setSeusGrupos(response.data.groups);
-      console.log(response.data.groups);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  async function handleForm() {
+  const handleForm = () => {
     navigation.navigate('GroupsForm');
-  }
+  };
 
   const handleTabPress = (tabName) => {
     setSelectedTab(tabName);
@@ -98,9 +92,24 @@ export default function Groups() {
     selectedTab === 'participando' ? participatingGroups :
     selectedTab === 'explorar' ? otherGroups : [];
 
+  useEffect(() => {
+    const handleSearch = () => {
+      if (search.trim() === '') {
+        setSearchResults([]);
+      } else {
+        const filteredResults = filteredGroups.filter(group => {
+          return group.name.toLowerCase().includes(search.toLowerCase());
+        });
+        setSearchResults(filteredResults);
+      }
+    };
+
+    handleSearch();
+  }, [search, filteredGroups]);
+
   return (
     <ScrollView>
-<WavesComponentGroups />
+      <WavesComponentGroups />
       <TouchableOpacity style={styles.overlay} onPress={handleForm}>
         <Ionicons name="add" size={40} color="#696969" style={{ fontWeight: 'bold' }} />
         <Text style={{ color: "#696969", fontWeight: 'bold' }}>Novo Grupo</Text>
@@ -125,19 +134,24 @@ export default function Groups() {
           <Text style={styles.tabText}>Explorar</Text>
         </TouchableOpacity>
       </View>
-        <View style={styles.searchContainer}>
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Pesquisar grupos"
-            value={search}
-            onChangeText={text => setSearchText(text)}
-          />
-          <TouchableOpacity style={styles.searchButton}>
-            <Ionicons name="search" size={20} color="#696969" />
-          </TouchableOpacity>
-        </View>
+      <View style={styles.searchContainer}>
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Pesquisar grupos"
+          value={search}
+          onChangeText={text => setSearchText(text)}
+        />
+        <TouchableOpacity style={styles.searchButton}>
+          <Ionicons name="search" size={20} color="#696969" />
+        </TouchableOpacity>
+      </View>
       <View style={styles.groupsContainer}>
         {filteredGroups.map(group => (
+          <GroupsContainer key={group._id} group={group} />
+        ))}
+      </View>
+      <View style={styles.groupsContainer}>
+        {searchResults.map(group => (
           <GroupsContainer key={group._id} group={group} />
         ))}
       </View>
@@ -146,58 +160,57 @@ export default function Groups() {
 }
 
 const styles = StyleSheet.create({
-  overlay: {
-    position: 'absolute',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgb(233,233,233)',
-    width: '70%',
-    height: 150,
-    marginTop: '15%',
-    marginLeft: '15%',
-    borderRadius: 25,
-  },
-  tabContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginVertical: 10,
-  },
-  tab: {
-    flex: 1,
-    alignItems: 'center',
-    paddingVertical: 10,
-  },
-  activeTab: {
-    flex: 1,
-    alignItems: 'center',
-    paddingVertical: 10,
-    borderBottomWidth: 2,
-    borderBottomColor: '#696969',
-  },
-  tabText: {
-    color: '#696969',
-    fontWeight: 'bold',
-  },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: 20,
-    marginBottom: 10,
-  },
-  searchInput: {
-    flex: 1,
-    height: 40,
-    borderWidth: 1,
-    borderColor: '#696969',
-    borderRadius: 20,
-    paddingHorizontal: 15,
-  },
-  searchButton: {
-    marginLeft: 10,
-  },
-  groupsContainer: {
-    paddingHorizontal: 20,
-    marginBottom: 20,
-  },
+overlay: {
+  position: 'absolute',
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: 'rgb(233,233,233)',
+  width: '70%',
+  height: 150,
+  marginTop: '15%',
+  marginLeft: '15%',
+  borderRadius: 25,
+},
+tabContainer: {
+  flexDirection: 'row',
+  justifyContent: 'center',
+  marginVertical: 10,
+},
+tab: {
+  flex: 1,
+  alignItems: 'center',
+  paddingVertical: 10,
+},
+activeTab: {
+  flex: 1,
+  alignItems: 'center',
+  paddingVertical: 10,
+  borderBottomWidth: 2,
+  borderBottomColor: '#696969',
+},
+tabText: {
+  color: '#696969',
+  fontWeight: 'bold',
+},
+searchContainer: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginHorizontal: 20,
+  marginBottom: 10,
+},
+searchInput: {
+  flex: 1,
+  height: 40,
+  borderWidth: 1,
+  borderColor: '#696969',
+  borderRadius: 20,
+  paddingHorizontal: 15,
+},
+searchButton: {
+  marginLeft: 10,
+},
+groupsContainer: {
+  paddingHorizontal: 20,
+  marginBottom: 20,
+},
 });
-

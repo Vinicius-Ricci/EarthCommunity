@@ -22,6 +22,8 @@ const [selectedValue, setSelectedValue] = useState('');
   const [userId, setUserId] = useState('');
   const [posts, setPosts] = useState([]);
   const [userGroups, setUserGroups] = useState([]);
+  const [uploading, setUploading] = useState(false); // Add this line
+
 
 
 

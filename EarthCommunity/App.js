@@ -6,6 +6,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import Feed from './src/screens/Feed';
+import GroupsForm from './src/screens/GroupsForm';
 
 const Stack = createStackNavigator();
 
