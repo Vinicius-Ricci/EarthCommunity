@@ -7,6 +7,7 @@ import { TextInput, Button, Avatar, SendIcon } from '@react-native-material/core
 import { Ionicons } from '@expo/vector-icons';
 import GroupsContainer from '../components/GroupsContainer';
 import GroupsSeusgrupos from '../components/GroupsSeusgrupos';
+import GroupsExplorer from '../components/GroupsExplorer';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -16,6 +17,8 @@ export default function Groups() {
   const [groups, setGroups] = useState([]);
   const navigation = useNavigation();
   const [userId, setUserId] = useState('');
+  const [forceUpdate, setForceUpdate] = useState(false);
+
 
   
   useEffect(() => {
@@ -46,15 +49,19 @@ export default function Groups() {
   async function handleForm() {
     navigation.navigate('GroupsForm');
   }
-
   const handleTabPress = (tabName) => {
-    setSelectedTab(tabName.toLowerCase());
+    if (selectedTab === 'seusGrupos' && tabName.toLowerCase() === 'seusgrupos') {
+      setForceUpdate(!forceUpdate);
+    } else {
+      setSelectedTab(tabName.toLowerCase());
+    }
   };
   
   const windowWidth = Dimensions.get('window').width;
 
   const filteredGroups = groups.filter((group) => group.createdByUser.user._id == userId);
   const filterParticipation = groups.filter((group) => group.members.some(member => member.user._id === userId));
+  const filterExplore = groups.filter((group) => !group.members.some(member => member.user._id === userId));
 
 
   return (
@@ -85,25 +92,27 @@ export default function Groups() {
           <Text style={[styles.tabText, selectedTab === 'explorar' && styles.activeTabText]}>Explorar</Text>
         </TouchableOpacity>
       </View>
- 
       <View style={styles.viewContainer}>
-  {selectedTab === 'seusgrupos' ? (
-    <View style={styles.groupsContainer}>
-      {filteredGroups.map((group) => (
-        <GroupsSeusgrupos key={group._id} group={group} style={styles.groupsItem} />
-      ))}
-    </View>
-  ) : selectedTab === 'participando' ? (
-    <View style={styles.groupsContainer}>
-      {filterParticipation.map((group) => (
-        <GroupsContainer key={group._id} group={group} style={styles.groupsItem} />
-      ))}
-    </View>
-  ) : (
-    <View style={styles.groupsContainer}></View>
-  )}
-</View>
-
+        {selectedTab === 'seusgrupos' ? (
+          <View style={styles.groupsContainer}>
+            {filteredGroups.map((group) => (
+              <GroupsSeusgrupos key={group._id} group={group} style={styles.groupsItem} />
+            ))}
+          </View>
+        ) : selectedTab === 'participando' ? (
+          <View style={styles.groupsContainer}>
+            {filterParticipation.map((group) => (
+              <GroupsContainer key={group._id} group={group} style={styles.groupsItem} />
+            ))}
+          </View>
+        ) : (
+            <View style={styles.groupsContainer}>
+            {filterExplore.map((group) => (
+              <GroupsExplorer key={group._id} group={group} style={styles.groupsItem} />
+            ))}
+          </View>
+        )}
+      </View>
     </ScrollView>
   );
 }

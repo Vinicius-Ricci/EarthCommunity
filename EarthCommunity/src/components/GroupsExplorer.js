@@ -35,7 +35,7 @@ import axios from 'axios';
 import { Ionicons } from '@expo/vector-icons';
 
 
-const GroupsContainer = ({group}) => {
+const GroupsExplorer = ({group}) => {
   const [userId, setUserId] = useState('');
   const [isDeleted, setIsDeleted] = useState(false);
   const [updatedGroup, setUpdatedGroup] = useState(null); // Novo estado
@@ -59,7 +59,7 @@ const GroupsContainer = ({group}) => {
       const response = await axios.post(
           `https://earth-community-backend-dev.up.railway.app/api/group/add-member/${group._id}/${userId}`
       );
-      console.log(response.data);
+      console.log(response.data.group);
 
 
 
@@ -107,10 +107,10 @@ const GroupsContainer = ({group}) => {
        <Avatar style={styles.avatar} image={group.image} size={80} />
        <Text style={styles.title}>{group.name}</Text>
       <Text style={styles.subtitle}>{group.description}</Text>
-      <TouchableOpacity style={styles.buttondelete} onPress={handleDeleteUserGroup}>
-  <Ionicons name="exit-outline" size={20} color="#fff" style={styles.buttonIcon} />
-  <Text style={styles.buttonText}>Sair</Text>
-</TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={handleAddUserGroup}>
+        <Ionicons name="arrow-forward" size={20} color="#fff" style={styles.buttonIcon} />
+        <Text style={styles.buttonText}>Entrar</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -149,15 +149,7 @@ const styles = StyleSheet.create({
     marginBottom: '4%',
 
   },
-  buttondelete:{
-    width: 200,
-    height: 40,
-    borderRadius: 10,
-    backgroundColor: '#fa5555',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: '4%',
-  },
+
   buttonText: {
     color: '#fff',
     fontSize: 16,
@@ -171,4 +163,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default GroupsContainer;
+export default GroupsExplorer;

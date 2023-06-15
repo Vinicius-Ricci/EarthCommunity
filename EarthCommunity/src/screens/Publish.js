@@ -24,17 +24,26 @@ const [selectedValue, setSelectedValue] = useState('');
   const [userGroups, setUserGroups] = useState([]);
   const [uploading, setUploading] = useState(false); // Add this line
 
+  useEffect(() => {
+    const getUser = async () => {
+      const userString = await AsyncStorage.getItem('user');
+      const user = JSON.parse(userString);
+      setUserId(user._id);
 
+    };
+
+    getUser();
+  }, []);
 
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "https://earth-community-backend-dev.up.railway.app/api/group/get-all"
+          `https://earth-community-backend-dev.up.railway.app/api/group/get-all`
         );
         console.log(response.data);
-        const userGroups = response.data.group;
+        const userGroups = response.data.groups;
         setGroups(userGroups);
         setUserGroups(userGroups);
       } catch (error) {
@@ -63,25 +72,14 @@ const [selectedValue, setSelectedValue] = useState('');
         AtualizarGrupos();
       }, []);
     
-  useEffect(() => {
-    const getUser = async () => {
-      const userString = await AsyncStorage.getItem('user');
-      const user = JSON.parse(userString);
-      setUserId(user._id);
 
-    };
-
-    getUser();
-  }, []);
-
-
-  const handleValueChange = (itemValue, itemIndex) => {
-    setSelectedValue(itemValue);
-
-    const selectedItem = groups.find((group) => group._id === itemValue);
-    setSelectedItem(selectedItem);
-    console.log(selectedItem)
-  };
+      const handleValueChange = (itemValue, itemIndex) => {
+        setSelectedValue(itemValue);
+      
+        const selectedItem = groups.find(group => group._id === itemValue);
+        setSelectedItem(selectedItem);
+        console.log(selectedItem);
+      };
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -166,24 +164,20 @@ const [selectedValue, setSelectedValue] = useState('');
             <View style={styles.publication}>
                 <View style={styles.userInfoContainer}>
                     <View style={styles.flex}>
-                        <Avatar style={styles.avatar} image={{ uri: "https://media.gq-magazine.co.uk/photos/620529e268071f7ecff06fac/1:1/w_1080,h_1080,c_limit/100222_Bobba_hp.jpg" }} size={48} />
+                        <Avatar style={styles.avatar} image={{ uri: "100222_Bobba_hp.jpg" }} size={48} />
                         <View>
                      <Text style={styles.username}>Nome de Usuário</Text>
-                      <Picker
-                        selectedValue={selectedValue}
-                        onValueChange={handleValueChange}
-                        style={styles.picker}
-                        itemStyle={styles.pickerItem}
-                      >
-                       {Array.isArray(userGroups) && userGroups.length > 0 ? (
-    userGroups.map(group => (
-      <Picker.Item label={group.name} key={group._id} value={group._id} />
-    ))
-  ) : (
-    <Text>No groups available</Text>
-  )}
-                      </Picker>
+                     <Picker
+  selectedValue={selectedValue}
+  onValueChange={handleValueChange}
+  style={styles.picker}
+  itemStyle={styles.pickerItem}
+>
+{groups && groups.map(group => (
+  <Picker.Item label={group.name} value={group._id} key={group._id} />
+))}
 
+</Picker>
                         </View>
                     </View>
 
