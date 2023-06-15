@@ -109,7 +109,13 @@ const GroupForm = () => {
         } 
       });
 
-      
+      setGroupName('')
+      setCategory('')
+      setCity('')
+      setDescription('')
+      setImage('')
+      setState('')
+  
        Alert.alert('Group created successfully!');
 
 

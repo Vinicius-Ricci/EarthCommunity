@@ -93,10 +93,10 @@ const PostDetails = ({ post }) => {
           />
           <Text style={styles.likesCount}>{likesCount}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.commentContainer} onPress={handleCommentClick}>
+        {/* <TouchableOpacity style={styles.commentContainer} onPress={handleCommentClick}>
           <FontAwesome name="comment" size={20} color="gray" />
           <Text style={styles.commentText}>Comment</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       <Modal visible={showModal} animationType="slide" transparent={true}>
         <ScrollView>
