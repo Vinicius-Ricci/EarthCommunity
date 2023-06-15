@@ -38,7 +38,8 @@
     "react-redux": "^8.0.5",
     "redux": "^4.2.1",
     "styled-components": "^5.3.9",
-    "uri-js": "^4.4.1"
+    "uri-js": "^4.4.1",
+    "react-native-webview": "11.26.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

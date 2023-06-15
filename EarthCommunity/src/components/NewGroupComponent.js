@@ -9,10 +9,10 @@ const MyComponent = () => {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text style={{ color: '#17B978', fontSize: 20, marginTop: 20, marginBottom: 20, textAlign: 'center' }}>
-        Navegue até grupos através do botão abaixo
+        Navegue até seus grupos através do botão abaixo
       </Text>
       <Button
-        title="Ir para Grupos"
+        title="Ir para seus Grupos"
         onPress={handleNavigation}
         color="#17B978"
         style={{margin: 20}}
