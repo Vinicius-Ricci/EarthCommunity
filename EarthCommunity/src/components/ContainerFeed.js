@@ -43,13 +43,13 @@ export default function ContainerFeed() {
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      {/* <ScrollView contentContainerStyle={styles.scrollContent}>
         {posts.map((post) => (
           <View key={post._id}>
             <PostDetails post={post} updateComments={updatePostComments} />
           </View>
         ))}
-      </ScrollView>
+      </ScrollView> */}
     </View>
   );
 }

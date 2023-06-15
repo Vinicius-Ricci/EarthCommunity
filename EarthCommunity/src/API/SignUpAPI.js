@@ -8,7 +8,8 @@ export async function handleSignUp(firstName, surname, email, password, confirmP
         info: {
           firstName: firstName,
           surname: surname,
-          email: email
+          email: email,
+
         },
         security: {
           authWith: "manually",
