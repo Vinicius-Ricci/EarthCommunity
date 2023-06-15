@@ -32,6 +32,8 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Avatar } from '@react-native-material/core';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { Ionicons } from '@expo/vector-icons';
+
 
 const GroupsContainer = ({group}) => {
   const [userId, setUserId] = useState('');
@@ -58,7 +60,6 @@ const GroupsContainer = ({group}) => {
       console.log(response.data);
 
 
-        // updateGroups()
 
     } catch (error) {
       console.error(error);
@@ -104,12 +105,10 @@ const GroupsContainer = ({group}) => {
        <Avatar style={styles.avatar} image={group.image} size={80} />
        <Text style={styles.title}>{group.name}</Text>
       <Text style={styles.subtitle}>{group.description}</Text>
-      <TouchableOpacity style={styles.button} onPress={handleAddUserGroup}>
-      <Text style={styles.buttonText}>Entrar</Text>
-      </TouchableOpacity>
       <TouchableOpacity style={styles.buttondelete} onPress={handleDeleteUserGroup}>
-      <Text style={styles.buttonText}>Sair do grupo</Text>
-      </TouchableOpacity>
+  <Ionicons name="exit-outline" size={20} color="#fff" style={styles.buttonIcon} />
+  <Text style={styles.buttonText}>Sair</Text>
+</TouchableOpacity>
     </View>
   );
 };
@@ -162,6 +161,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  buttonIcon: {
+    marginRight: 5,
+  },
+  
 
 });
 

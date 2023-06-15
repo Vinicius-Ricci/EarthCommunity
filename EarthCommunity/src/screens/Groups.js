@@ -6,6 +6,8 @@ import { StyleSheet, View, ScrollView, TouchableOpacity, Dimensions } from 'reac
 import { TextInput, Button, Avatar, SendIcon } from '@react-native-material/core';
 import { Ionicons } from '@expo/vector-icons';
 import GroupsContainer from '../components/GroupsContainer';
+import GroupsSeusgrupos from '../components/GroupsSeusgrupos';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
@@ -46,8 +48,9 @@ export default function Groups() {
   }
 
   const handleTabPress = (tabName) => {
-    setSelectedTab(tabName);
+    setSelectedTab(tabName.toLowerCase());
   };
+  
   const windowWidth = Dimensions.get('window').width;
 
   const filteredGroups = groups.filter((group) => group.createdByUser.user._id == userId);
@@ -70,28 +73,37 @@ export default function Groups() {
           <Text style={[styles.tabText, selectedTab === 'seusGrupos' && styles.activeTabText]}>Seus grupos</Text>
         </TouchableOpacity>
         <TouchableOpacity
+    style={[styles.tabButton, selectedTab === 'participando' && styles.activeTabButton]}
+    onPress={() => handleTabPress('participando')}
+  >
+    <Text style={[styles.tabText, selectedTab === 'participando' && styles.activeTabText]}>Participando</Text>
+  </TouchableOpacity>
+        <TouchableOpacity
           style={[styles.tabButton, selectedTab === 'explorar' && styles.activeTabButton]}
           onPress={() => handleTabPress('explorar')}
         >
           <Text style={[styles.tabText, selectedTab === 'explorar' && styles.activeTabText]}>Explorar</Text>
         </TouchableOpacity>
       </View>
+ 
       <View style={styles.viewContainer}>
-        {selectedTab === 'seusGrupos' ? (
-  <View style={styles.groupsContainer}>
-  {filteredGroups.map((group) => (
-    <GroupsContainer key={group._id} group={group} style={styles.groupsItem} />
-  ))}
+  {selectedTab === 'seusgrupos' ? (
+    <View style={styles.groupsContainer}>
+      {filteredGroups.map((group) => (
+        <GroupsSeusgrupos key={group._id} group={group} style={styles.groupsItem} />
+      ))}
+    </View>
+  ) : selectedTab === 'participando' ? (
+    <View style={styles.groupsContainer}>
+      {filterParticipation.map((group) => (
+        <GroupsContainer key={group._id} group={group} style={styles.groupsItem} />
+      ))}
+    </View>
+  ) : (
+    <View style={styles.groupsContainer}></View>
+  )}
 </View>
-        ) : (
-            <View style={styles.groupsContainer}>
-            {filteredGroups.map((group) => (
-              <GroupsContainer key={group._id} group={group} style={styles.groupsItem} />
-            ))}
-          </View>
-          
-        )}
-      </View>
+
     </ScrollView>
   );
 }
@@ -110,6 +122,7 @@ const styles = StyleSheet.create({
   },
   tabContainer: {
     flexDirection: 'row',
+    justifyContent: 'space-around',
     marginTop: '12%',
     marginHorizontal: 30,
   },
