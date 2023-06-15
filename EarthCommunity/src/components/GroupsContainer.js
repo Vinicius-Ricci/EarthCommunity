@@ -95,6 +95,7 @@ const GroupsContainer = ({group}) => {
       console.log(response.data);
       console.log(group);
 
+      setIsDeleted(true); 
 
     } catch (error) {
       console.error(error);
